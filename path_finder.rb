@@ -10,29 +10,52 @@ end
 #На выходе получаем массив со всеми числами из файла
 def parse_data(data)
 	data_array = Array.new
+	sub_data_array = Array.new
 	num_str = " "
 	col_num = 0
+
 	data.each.with_index do |line, index|
+		sub_data_array = []
+		
 		line.each_char do |c|
 			col_num += 1
 
 			if c != " " && c != "\n"
 				num_str += c
 			elsif num_str != " "
-				data_array.push num_str.to_i
+				sub_data_array.push num_str.to_i
 				num_str = " "
 			end
 
 			if col_num == line.length && num_str != " "
-			data_array.push num_str.to_i
+			sub_data_array.push num_str.to_i
 			end
 		end
+
+		data_array.push sub_data_array
 		col_num = 0
 	end
 	return data_array
 end
 
+def parse_data_array(data)
+	data_array = Array.new
+	num_str = " "
+	data.each.with_index do |line, index|
+		line.each_char do |c|
+			if c != " " && c != "\n"
+				num_str += c
+			elsif num_str != " "
+				data_array.push num_str.to_i
+				num_str = " "
+			end
+		end
+	end
+	return data_array
+end
+
 #Определяет количество линий N в файле
+#Пометка, теперь эти два метода не нужны, все можно получить из parse_data
 def numOfLines(data)
 	return data.length
 end
