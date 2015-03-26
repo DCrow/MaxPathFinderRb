@@ -1,4 +1,5 @@
-#Считать из файла все числа, также узнает сколько строк в файле
+
+# Считать из файла все числа, также узнает сколько строк в файле
 def read_file(file_name)
 	data = Array.new
 	file = File.open(file_name,"r").readlines.each do |line|
@@ -7,7 +8,7 @@ def read_file(file_name)
 	return data
 end
 
-#На выходе получаем массив со всеми числами из файла
+# На выходе получаем двумерный массив со всеми числами из файла
 def parse_data(data)
 	data_array = Array.new
 	sub_data_array = Array.new
@@ -38,6 +39,7 @@ def parse_data(data)
 	return data_array
 end
 
+# Возвращает одномерный массив данных.
 def parse_data_array(data)
 	data_array = Array.new
 	num_str = " "
@@ -54,8 +56,8 @@ def parse_data_array(data)
 	return data_array
 end
 
-#Определяет количество линий N в файле
-#Пометка, теперь эти два метода не нужны, все можно получить из parse_data
+# Определяет количество линий N в файле
+# Пометка, теперь эти два метода не нужны, все можно получить из parse_data
 def numOfLines(data)
 	return data.length
 end

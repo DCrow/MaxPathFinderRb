@@ -15,6 +15,8 @@
 	 else
 	 	puts "not Empty" 
 	 end
+	 a = ar.pop
+	 show_value(a,"a")
  test_end(1)
 
  test_start(2)
@@ -23,8 +25,8 @@
  test_end(1)
 
  test_start(3)
- a = [1, 2, 3]
- b = [4, 5, 6]
- a = b
- puts a
+	 a = [1, 2, 3]
+	 b = [4, 5, 6]
+	 a = b
+	 puts a
  test_end(3)
