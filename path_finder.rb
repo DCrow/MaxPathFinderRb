@@ -53,6 +53,7 @@ def parse_data_array(data)
 			end
 		end
 	end
+	data_array.push num_str.to_i
 	return data_array
 end
 
@@ -63,6 +64,6 @@ def numOfLines(data)
 end
 
 def numOfCollumns(data)
-	return parse_data(data).length/data.length
+	return (parse_data_array(data).length)/data.length
 end
 

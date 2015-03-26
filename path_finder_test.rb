@@ -89,6 +89,7 @@ test_start(4)
 test_end(4)
 
 test_start(5)
+	puts array4.length
 	puts numOfLines(read_file("test_file2.txt"))
 	puts numOfCollumns(read_file("test_file2.txt"))
 test_end(5)
@@ -118,3 +119,24 @@ test_end(5)
 
  test_end(6)
 
+test_start(7)
+
+data_array = Array.new
+	num_str = " "
+	data1.each.with_index do |line, index|
+		line.each_char do |c|
+			if c != " " && c != "\n"
+				num_str += c
+				puts "Inputed #{c}"
+			elsif num_str != " "
+				data_array.push num_str.to_i
+				puts "Pushed"
+				#puts data_array
+				num_str = " "
+			end
+		end
+		
+	end
+	data_array.push num_str.to_i
+	puts data_array
+test_end(7)

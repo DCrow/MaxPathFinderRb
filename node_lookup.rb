@@ -1,17 +1,16 @@
 require_relative "path_finder.rb"
-
 class Node
 
 	# Конструктор. Принимает массив данных. Количество столбцов в таблице данных
 	# из которой сделан массив. И начальную вершину первой строки.
-	def new(data_array, num_cools, start_node)
-		@data_hash = Hash.new { |hash, key| hash[key] = data_array[key] }
+	def initialize(data_array, num_cools, start_node)
+		@data_hash = Hash[makeNumberArray(data_array.length - 1).zip(data_array)]
 		@num_cools = num_cools
 		@nodeSum = data_array[start_node]
 		@curr_node = start_node
-		if n == start_node
-			(1..data_array.length/n).each do |i|
-				data_hash.delete(i * n)
+		if num_cools == start_node
+			(1..(data_array.length)/num_cools).each do |i|
+				@data_hash.delete(i * num_cools)
 			end
 		end
 	end
@@ -22,14 +21,14 @@ class Node
 	@nodeSum = 0 # Сумма вершин предшествующих нынешней с учетом нынешней
 	@@maxNodeSum = 0 # Максимальная сумма вершин. Для удобства одна на все древа.
 	@curr_node = 0 # Вершина в которой мы находимся
-	@@nodeMaxPath = [] # Путь максимальной суммы вершин @@maxNodeSum. Для удобства одна на все древа.
- 	@nodePath = [] # Путь который мы использовали чтобы попасть в @curr_node
-	@nodeStack = [] # Вершины от которых мы еще не посетили второй соседней вершины
+	@@nodeMaxPath = Array.new # Путь максимальной суммы вершин @@maxNodeSum. Для удобства одна на все древа.
+ 	@nodePath = Array.new # Путь который мы использовали чтобы попасть в @curr_node
+	@nodeStack = Array.new # Вершины от которых мы еще не посетили второй соседней вершины
 	@wentBack = false # Для знания вернулись ли в вершину из которой не посетили второго соседа или нет.
 
 	# Проверить есть ли соседняя вершина
 	def check_forward(n)
-		if data_hash.has_key?(@curr_node + n)
+		if @data_hash.has_key?(@curr_node + n)
 			return true
 		else
 			return false
@@ -38,10 +37,10 @@ class Node
 
 	# Перейти в соседнюю вершину
 	def go_forward(n)
-		@nodeStack.push curr_node
+		@nodeStack.push @curr_node
 		@curr_node += n
-		@nodeSum += data_hash[curr_node]
-		@nodePath.push curr_node
+		@nodeSum += data_array[curr_node]
+		@nodePath.push @curr_node
 		@wentBack = false
 	end 
 
@@ -54,8 +53,8 @@ class Node
 			return
 		end
 		back_node = @nodeStack.pop
-		@nodeSum -= data_hash[curr_node]
-		@nodePath.pop curr_node
+		@nodeSum -= data_array[curr_node]
+		@nodePath.pop @curr_node
 		@curr_node = back_node
 	end
 
@@ -81,6 +80,20 @@ class Node
 				checkMaxSum()
 				go_back()
 			end
-		end while !nodeStack.empty? && @wentBack == false
+		end while !@nodeStack.empty? && @wentBack == false
 	end
+
+	#For TESTING PURPOSES
+	def showDataArray()
+		return @data_hash
+	end
+
+	def makeNumberArray(n)
+		num_arr = Array.new
+		(0..n).each do |k|
+			num_arr[k] = k
+		end
+		return num_arr
+	end
+
 end
