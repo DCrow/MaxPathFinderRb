@@ -1,4 +1,5 @@
 require_relative "path_finder.rb"
+require_relative "method_tester.rb"
 class Node
 
 	# Конструктор. Принимает массив данных. Количество столбцов в таблице данных
@@ -8,6 +9,9 @@ class Node
 		@num_cools = num_cools
 		@nodeSum = data_array[start_node]
 		@curr_node = start_node
+		@nodeStack = Array.new
+		@nodePath = Array.new
+		@wentBack = false
 		if num_cools == start_node
 			(1..(data_array.length)/num_cools).each do |i|
 				@data_hash.delete(i * num_cools)
@@ -28,31 +32,36 @@ class Node
 
 	# Проверить есть ли соседняя вершина
 	def check_forward(n)
-		if @data_hash.has_key?(@curr_node + n)
+		c = @curr_node + n
+		if @data_hash.has_key?(c)
+			show_value(c,"Key")
 			return true
 		else
+			show_value(c,"key")
 			return false
 		end
 	end
 
 	# Перейти в соседнюю вершину
 	def go_forward(n)
+		show_value(@curr_node,"curr_node")
 		@nodeStack.push @curr_node
 		@curr_node += n
-		@nodeSum += data_array[curr_node]
+		@nodeSum += @data_hash[@curr_node]
 		@nodePath.push @curr_node
 		@wentBack = false
 	end 
 
  	# Вернуться в вершину от которой мы не посещали вторую соседнюю вершину
 	def go_back()
-		if nodeStack.empty?
+		if @nodeStack.empty?
 			@wentBack = true
 		else
 			@wentBack = false
 			return
 		end
 		back_node = @nodeStack.pop
+		show_value(back_node,"Popped value")
 		@nodeSum -= data_array[curr_node]
 		@nodePath.pop @curr_node
 		@curr_node = back_node
@@ -60,7 +69,7 @@ class Node
 
 	# Проверить не является ли сумма на ныншнем пути наибольшей
 	def checkMaxSum()
-		maxSum = [@nodeSum,@maxNodeSum].max
+		maxSum = [@nodeSum,@@maxNodeSum].max
 		if @maxNodeSum != maxSum
 			@@nodeMaxPath = @nodePath
 			@maxNodeSum = maxSum
@@ -72,20 +81,32 @@ class Node
 		left = @num_cools
 		right = @num_cools + 1
 		begin
-			if check_forward(left) && @wentBack == false
+			#show_value_bool(@wentBack, "wentBack")
+			if (check_forward(left) && (@wentBack == false))
+				print_mess("Went Forward Left")
+				show_value(@curr_node, "curr_node")
 				go_forward(left)
+				
 			elsif check_forward(right)
+				print_mess("Went Forward Right")
+				show_value(@curr_node, "curr_node")
 				go_forward(right)
+				
 			else
 				checkMaxSum()
+				print_mess("wentBack")
 				go_back()
 			end
 		end while !@nodeStack.empty? && @wentBack == false
 	end
 
 	#For TESTING PURPOSES
-	def showDataArray()
+	def getDataHash()
 		return @data_hash
+	end
+
+	def getWentBack()
+		return @wentBack
 	end
 
 	def makeNumberArray(n)

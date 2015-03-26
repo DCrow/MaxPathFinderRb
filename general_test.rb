@@ -30,3 +30,11 @@
 	 a = b
 	 puts a
  test_end(3)
+
+ test_start(4)
+	if false == false
+		puts "hi"
+	else
+		puts "wtf?"
+	end
+ test_end(4)
