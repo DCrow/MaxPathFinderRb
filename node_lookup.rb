@@ -92,10 +92,13 @@ class Node
 				show_value(@curr_node, "curr_node")
 				go_forward(right)
 				
-			else
+			elsif @wentBack == false
 				checkMaxSum()
 				print_mess("wentBack")
 				go_back()
+				
+			else
+				@wentBack == true
 			end
 		end while !@nodeStack.empty? && @wentBack == false
 	end
