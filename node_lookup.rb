@@ -54,7 +54,7 @@ class Node
 
  	# Вернуться в вершину от которой мы не посещали вторую соседнюю вершину
 	def go_back()
-		if @nodeStack.empty?
+		if @nodeStack.empty? #ТУТ ПРОБЛЕМА. НАДО ИСПРАВИТЬ.
 			@wentBack = true
 		else
 			@wentBack = false
