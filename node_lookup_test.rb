@@ -39,9 +39,10 @@ end
 
 test_start(1)
 
-	node1 = Node.new(data_ar, colls, 0)
-	puts node1.getDataHash()
-	if node1.getDataHash().has_key?(15)
+	#node1 = Node.new(data_ar, colls, 0)
+	node2 = Node.new(data_ar, colls, 7)
+	puts node2.getDataHash()
+	if node2.getDataHash().has_key?(15)
 		puts "Yes"
 	else
 		puts "no"
@@ -51,13 +52,14 @@ test_start(1)
 	#show_value_bool((node1.getWentBack() == false),"getWentBack")
 	#show_value_bool(false == false,"0")
 	#show_value((node1.check_forward(5) && (node1.getWentBack() != true)),"eq")
-	node1.findMaxSumPath()
+	#node1.findMaxSumPath()
+	node2.findMaxSumPath()
 	#puts Node.maxNodeSum
 	
 
 	#node1.checkMaxSum()
-	puts node1.getMaxSum()
-	puts node1.getMaxPath()
+	puts node2.getMaxSum()
+	puts node2.getMaxPath()
 	#puts node1.getNodeSum()
 	#puts node1.getNodePath()
 

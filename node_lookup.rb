@@ -9,6 +9,7 @@ class Node
 		@num_cools = num_cools
 		@nodeSum = data_array[start_node]
 		@curr_node = start_node
+		@start_node = start_node
 		@nodeStack = Array.new
 		@nodePath = Array.new
 		@nodePath.push start_node
@@ -21,6 +22,7 @@ class Node
 	end
 
 	public
+	@start_node
 	@data_hash # Для хранения значений
 	@num_cools = 0 # Хранение значений столбцов в таблице
 	@nodeSum = 0 # Сумма вершин предшествующих нынешней с учетом нынешней
@@ -34,17 +36,13 @@ class Node
 	# Проверить есть ли соседняя вершина
 	def check_forward(n)
 		c = @curr_node + n
-		if n - 1 != 1
-			if @data_hash.has_key?(c)
+			if @data_hash.has_key?(c) && (n - @start_node - 2 != 0)
 				show_value(c,"Key")
 				return true
 			else
 				show_value(c,"key")
 				return false
 			end
-		else
-			return false
-		end
 	end
 
 	# Перейти в соседнюю вершину
@@ -76,15 +74,26 @@ class Node
 		# 	@wentBack = false
 		# 	return
 		# end
-		@wentBack = true
+		
+
+		
 		show_value(@nodePath, "Current Node Path s")
 		show_value(@nodeSum, "Current Node Sum s")
 		show_value(@nodeStack,"Current Node Stack s")
 		show_value(@curr_node, "Current Node s")
 		if !@nodeStack.empty?
 
+			# if (@num_cools - 1 - @start_node == 0)
+			# 	(0..@nodeStack.length).each do |x|
+			# 		@nodeStack.pop
+			# 	end
+			# 	print_mess("Cannot go Back")
+			# 	return
+			# end
+			@wentBack = true
 			back_node = @nodeStack.pop
 			
+
 			
 			i_r = (@curr_node - back_node - 1)/@num_cools - 1
 			show_value(i_r, "i_r")
