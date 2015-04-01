@@ -4,16 +4,17 @@ class Node
 
 	# Конструктор. Принимает массив данных. Количество столбцов в таблице данных
 	# из которой сделан массив. И начальную вершину первой строки.
-	def initialize(data_array, num_cools, start_node)
+	def initialize(data_array)
 		@data_hash = Hash[makeNumberArray(data_array.length - 1).zip(data_array)]
-		@num_cools = num_cools
-		@nodeSum = data_array[start_node]
-		@curr_node = start_node
-		@start_node = start_node
+		@num_cools = 1
+		@start_node = 0
+		@nodeSum = data_array[@start_node]
+		@curr_node = @start_node
 		@nodeStack = Array.new
 		@nodePath = Array.new
-		@nodePath.push start_node
+		@nodePath.push @start_node
 		@wentBack = false
+		@path_cnt = 0
 	end
 
 	public
@@ -31,7 +32,7 @@ class Node
 	# Проверить есть ли соседняя вершина
 	def check_forward(n)
 		c = @curr_node + n
-			if @data_hash.has_key?(c) && (n - @start_node - 2 != 0)
+			if @data_hash.has_key?(c)
 				show_value(c,"Key")
 				return true
 			else
@@ -41,39 +42,43 @@ class Node
 	end
 
 	# Перейти в соседнюю вершину
-	def go_left()
-		show_value(@curr_node,"curr_node")
-		if check_forward(@num_cools + 1)
-			@nodeStack.push @curr_node
-		end
-		go(@num_cools)
-	end
+	# def go_left()
+	# 	show_value(@curr_node,"curr_node")
+	# 	if check_forward(@num_cools + 1)
+	# 		@nodeStack.push @curr_node
+	# 	end
+	# 	go(@num_cools)
+	# end
 
 	def go(n)
-		if n == @num_cools && check_forward(@num_cools + 1)
+		if n == @num_cools && check_forward(n) 
+			print_mess("Pushed to Stack")
 			@nodeStack.push @curr_node
 		end
 		@curr_node += n
 		@nodeSum += @data_hash[@curr_node]
+		show_value(@data_hash[@curr_node], "data_hash")
 		@nodePath.push @curr_node
+		@num_cools += 1
 		@wentBack = false
+
 	end
 
-	def go_right()
-		show_value(@curr_node,"curr_node")
-		go(@num_cools + 1)
-	end 
+	# def go_right()
+	# 	show_value(@curr_node,"curr_node")
+	# 	go(@num_cools + 1)
+	# end 
 
-	def renew(n)
-		@start_node += n
-		@curr_node = @start_node
-		@nodeSum = @data_hash[@start_node]
-		@nodeStack = Array.new
-		@nodePath = Array.new
-		@nodePath.push @start_node
-		@wentBack = false
-		@pathEnd = false
-	end
+	# def renew(n)
+	# 	@start_node += n
+	# 	@curr_node = @start_node
+	# 	@nodeSum = @data_hash[@start_node]
+	# 	@nodeStack = Array.new
+	# 	@nodePath = Array.new
+	# 	@nodePath.push @start_node
+	# 	@wentBack = false
+	# 	@pathEnd = false
+	# end
 
  	# Вернуться в вершину от которой мы не посещали вторую соседнюю вершину
 	def go_back()
@@ -94,35 +99,19 @@ class Node
 
 			@wentBack = true
 			back_node = @nodeStack.pop
-			
-			i_r = (@curr_node - back_node - 1)/@num_cools - 1
-			show_value(i_r, "i_r")
-			i_l = (@curr_node - back_node)/@num_cools - 1
-			show_value(i_l,"i_l")
-
-			if (i_r.is_a? Integer) && i_r != 0 && i_r > 0
-				(0..i_r).each do |x|
-					b_nod = @nodePath.pop
-					show_value(@nodePath, "nodePath")
-					show_value(b_nod, "b_nod")
-					show_value(@data_hash[b_nod], "data_hash")
-					@nodeSum -= @data_hash[b_nod]
-					
-				end
-			elsif (i_l.is_a? Integer) && i_l != 0 && i_l > 0
-				(0..i_l).each do |x|
-					b_nod = @nodePath.pop
-					show_value(@nodePath, "nodePath")
-					show_value(b_nod, "b_nod")
-					show_value(@data_hash[b_nod], "data_hash")
-					@nodeSum -= @data_hash[b_nod]
-					
-				end
-			else
-				b_nod = @nodePath.pop
-				@nodeSum -= @data_hash[@curr_node]
-			end
 			show_value(back_node,"Popped value")
+			#b_nod = @nodePath.pop
+			begin
+				b_nod = @nodePath.pop
+				@nodeSum -= @data_hash[b_nod]
+				@num_cools -= 1
+				show_value(@nodeSum, "nodeSum")
+				show_value(@nodePath, "nodePath")
+				show_value(b_nod, "b_nod")
+				show_value(@data_hash[b_nod], "data_hash")
+				b_nod = @nodePath[@nodePath.length-1]
+			end while back_node != b_nod
+			#@nodePath.push b_nod
 			show_value(@nodePath, "Current Node Path")
 			show_value(@nodeSum, "Current Node Sum")
 			show_value(@nodeStack,"Current Node Stack")
@@ -154,15 +143,14 @@ class Node
 
 	# Поиск пути наибольшей суммы
 	def findMaxSumPath()
-		left = @num_cools
-		right = @num_cools + 1
-		(1..@num_cools-@start_node).each do |i|
-			show_value(@start_node, "start_node")
+		
 		begin
-			#show_value_bool(@wentBack, "wentBack")
+			left = @num_cools
+			right = @num_cools + 1
+			show_value(@num_cools, "Num cools")
 			if (check_forward(left) && (@wentBack == false))
 				print_mess("Went Forward Left")
-				#show_value(@curr_node, "curr_node")
+				show_value(@curr_node, "curr_node")
 				go(left)
 				
 			elsif check_forward(right)
@@ -174,13 +162,13 @@ class Node
 				checkMaxSum()
 				print_mess("wentBack")
 				go_back()
+				@path_cnt += 1
 			end
-
+		
 		end while !@pathEnd
-		renew(1)
-	end
 		puts @@nodeMaxPath
 		puts @@maxNodeSum
+		puts @path_cnt
 	end
 
 	#For TESTING PURPOSES

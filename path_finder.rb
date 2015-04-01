@@ -7,8 +7,7 @@ public
 		@num_lines = @data.length
 		@data_array = parse_data_array()
 		@num_of_numbers = @data_array.length
-		@num_cools = @num_of_numbers/@data.length
-
+		@num_cools = parse_data[0].length
 	end
 	# Считать из файла все числа, также узнает сколько строк в файле
 	def read_file(file_name)
@@ -21,19 +20,22 @@ public
 
 	def write_file(file_name, node_array)
 		str_to_push = ""
+		last_push = 0
 		node_it = 0
 		times_to_push = @num_lines - 1
 		File.open(file_name, "w") do |l|
-			(0..@num_of_numbers - 1).each do |i|
-				str_to_push += @data_array[i].to_s
-				if i == node_array[node_it]
+			(1..@num_of_numbers).each do |i|
+				str_to_push += @data_array[i - 1].to_s
+				if i - 1 == node_array[node_it]
 					node_it += 1
 					str_to_push += "!!"
 				end
-				if (i + 1) % @num_cools == 0 && times_to_push != 0
+				if @num_cools == i - last_push && times_to_push != 0
 					str_to_push += "\n"
 					times_to_push -= 1
-				elsif (i + 1) % @num_cools != 0
+					@num_cools += 1
+					last_push = i
+				else
 					str_to_push += " "
 				end
 			end

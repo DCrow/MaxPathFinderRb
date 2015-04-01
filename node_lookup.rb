@@ -2,9 +2,9 @@ class Node
 
 	# Конструктор. Принимает массив данных. Количество столбцов в таблице данных
 	# из которой сделан массив. И начальную вершину первой строки.
-	def initialize(data_array, num_cools)
+	def initialize(data_array)
 		@data_hash = Hash[make_num_array(data_array.length - 1).zip(data_array)]
-		@num_cools = num_cools
+		@num_cools = 1
 		@node_sum = data_array[0]
 		@curr_node = 0
 		@start_node = 0
@@ -39,7 +39,7 @@ private
 	def check_forward(n)
 		c = @curr_node + n
 
-			if @data_hash.has_key?(c) && (n - @start_node - 2 != 0)
+			if @data_hash.has_key?(c)
 				return true
 			else
 				return false
@@ -49,26 +49,15 @@ private
 	# Переход из вершины в соседнюю вершину
 	def go(n)
 
-		if n == @num_cools && check_forward(@num_cools + 1)
+		if n == @num_cools && check_forward(n)
 			@node_stack.push @curr_node
 		end
 
 		@curr_node += n
 		@node_sum += @data_hash[@curr_node]
 		@node_path.push @curr_node
+		@num_cools += 1
 		@went_back = false
-	end
-
-	# Обновляет все переменные для прохода следующего древа с новым рутом
-	def renew(n)
-		@start_node += n
-		@curr_node = @start_node
-		@node_sum = @data_hash[@start_node]
-		@node_stack = Array.new
-		@node_path = Array.new
-		@node_path.push @start_node
-		@went_back = false
-		@path_end = false
 	end
 
  	# Вернуться в вершину от которой мы не посещали вторую соседнюю вершину
@@ -77,28 +66,16 @@ private
 
 			@went_back = true
 			back_node = @node_stack.pop
-			
-			i_r = (@curr_node - back_node - 1)/@num_cools - 1
-			i_l = (@curr_node - back_node)/@num_cools - 1
 
-			if (i_r.is_a? Integer) && i_r != 0 && i_r > 0
-				(0..i_r).each do |x|
-					b_nod = @node_path.pop
-					@node_sum -= @data_hash[b_nod]
-				end
-			elsif (i_l.is_a? Integer) && i_l != 0 && i_l > 0
-				(0..i_l).each do |x|
-					b_nod = @node_path.pop
-					@node_sum -= @data_hash[b_nod]
-				end
-			else
+			begin
 				b_nod = @node_path.pop
-				@node_sum -= @data_hash[@curr_node]
-			end
+				@node_sum -= @data_hash[b_nod]
+				@num_cools -= 1
+				b_nod = @node_path[@node_path.length-1]
+			end while back_node != b_nod
 
 			@curr_node = back_node
 		else
-
 			@path_end = true
 		end
 	end
@@ -124,12 +101,10 @@ public
 
 	# Поиск пути наибольшей суммы
 	def find_max_sum_path()
-
-		left = @num_cools
-		right = @num_cools + 1
-
-		(1..@num_cools-@start_node).each do |i|
 			begin
+
+				left = @num_cools
+				right = @num_cools + 1
 
 				if (check_forward(left) && (@went_back == false))
 					go(left)
@@ -139,10 +114,8 @@ public
 					check_max_sum()
 					go_back()
 				end
-			end while !@path_end
 
-			renew(1)
-		end
+			end while !@path_end
 	end
 
 	# Возвращает путь максимальной суммы
