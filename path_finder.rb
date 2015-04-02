@@ -28,7 +28,7 @@ public
 				str_to_push += @data_array[i - 1].to_s
 				if i - 1 == node_array[node_it]
 					node_it += 1
-					str_to_push += "!!"
+					str_to_push += "!"
 				end
 				if @num_cools == i - last_push && times_to_push != 0
 					str_to_push += "\n"
