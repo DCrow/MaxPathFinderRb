@@ -103,21 +103,23 @@ public
 
 	# Поиск пути наибольшей суммы
 	def find_max_sum_path()
-			begin
-
-				left = @num_cools
-				right = @num_cools + 1
-
-				if (check_forward(left) && (@went_back == false))
-					go(left)
-				elsif check_forward(right)
-					go(right)	
-				else
-					check_max_sum()
-					go_back()
-				end
-
-			end while !@path_end
+			
+		left = @num_cools
+		right = @num_cools + 1
+		puts "node_path is #{@node_path}"
+		if (check_forward(left) && (@went_back == false))
+			go(left)
+		elsif check_forward(right)
+			go(right)	
+		else
+			check_max_sum()
+			go_back()
+		end
+		if (@path_end)
+			return
+		else
+			find_max_sum_path();
+		end
 	end
 
 	# Возвращает путь максимальной суммы
