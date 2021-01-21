@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require "max_path_finder"
+
+puts MaxPathFinder.display(ARGV[0])
